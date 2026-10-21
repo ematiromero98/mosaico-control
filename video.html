@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Mosaico · Video</title>
+<style>html, body { margin: 0; height: 100%; background: #000; overflow: hidden; } iframe { border: 0; width: 100%; height: 100%; display: block; }</style>
+</head>
+<body>
+<!-- Puente para el panel de video del Mosaico en la TV. YouTube rechaza los videos embebidos desde páginas sin
+     dirección web (la app de la TV es un archivo local), así que la TV abre esta página y esta embebe el video.
+     ?canal=UC… muestra el vivo actual del canal; ?v=… un video puntual. -->
+<iframe id="v" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search), canal = q.get("canal") || "", video = q.get("v") || "";
+  if (!/^UC[\w-]{22}$/.test(canal) && !/^[\w-]{11}$/.test(video)) return;
+  var base = video ? "https://www.youtube.com/embed/" + video + "?" : "https://www.youtube.com/embed/live_stream?channel=" + canal + "&";
+  document.getElementById("v").src = base + "autoplay=1&playsinline=1&rel=0&mute=" + (q.get("mute") === "1" ? 1 : 0) +
+    "&origin=" + encodeURIComponent(location.origin);
+})();
+</script>
+</body>
+</html>
